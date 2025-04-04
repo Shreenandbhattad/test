@@ -2,43 +2,58 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Record Number in Google Sheet</title>
+  <title>Stock Market Simulator Trade Request</title>
 </head>
 <body>
-  <h1>Enter a Number</h1>
-  <form id="numberForm">
-    <input type="number" name="number" id="numberInput" placeholder="Enter a number" required>
-    <button type="submit">Submit</button>
+  <h1>Submit a Trade Request</h1>
+  <form id="tradeForm">
+    <label for="buyerUID">Buyer UID:</label>
+    <input type="text" id="buyerUID" name="buyerUID" required><br><br>
+
+    <label for="buyerName">Buyer Name:</label>
+    <input type="text" id="buyerName" name="buyerName" required><br><br>
+
+    <label for="sellerUID">Seller UID:</label>
+    <input type="text" id="sellerUID" name="sellerUID" required><br><br>
+
+    <label for="stock">Stock:</label>
+    <input type="text" id="stock" name="stock" required><br><br>
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required><br><br>
+
+    <label for="price">Price:</label>
+    <input type="number" step="0.01" id="price" name="price" required><br><br>
+
+    <button type="submit">Submit Trade Request</button>
   </form>
 
   <p id="statusMessage"></p>
 
   <script>
-    const form = document.getElementById('numberForm');
+    const form = document.getElementById('tradeForm');
     const statusMessage = document.getElementById('statusMessage');
 
     form.addEventListener('submit', function(e) {
       e.preventDefault(); // Prevent the default form submission
-      
-      const num = document.getElementById('numberInput').value;
-      // Replace the URL below with your Apps Script web app URL
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbxl9ax0ElklS2LrDyTTpc4-lpaeXqYt2HjHuY2WBa-fIvUlg-5Fx2LDd3wgrotaY9A/exec';
-      
-      // Prepare the data to send
-      const formData = new URLSearchParams();
-      formData.append('number', num);
+
+      // Collect the form data
+      const formData = new URLSearchParams(new FormData(form));
+
+      // Replace with your deployed Google Apps Script web app URL
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbyJtt5d_cFIy_nbZckqaWLzO0VUMqw5Nf3Io6IXPQDWkZuvxx8bG06xgDlCHxrbNEA/exec';
 
       // Send the POST request
       fetch(scriptURL, {
         method: 'POST',
-        mode: 'no-cors', // Use no-cors if you don't require a response (otherwise configure CORS in your script)
+        mode: 'no-cors', // Using no-cors because the web app may not have CORS enabled
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: formData.toString()
       })
       .then(() => {
-        statusMessage.textContent = 'Number submitted successfully!';
+        statusMessage.textContent = 'Trade request submitted successfully!';
         form.reset();
       })
       .catch((error) => {
